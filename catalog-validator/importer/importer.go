@@ -7,11 +7,7 @@ import (
 	"github.com/kurtosis-tech/stacktrace"
 )
 
-const (
-	kurtosisPackageCatalogYamlFilepath = "../kurtosis-package-catalog.yml"
-)
-
-func ReadCatalog() (catalog.PackageCatalog, error) {
+func ReadCatalog(kurtosisPackageCatalogYamlFilepath string) (catalog.PackageCatalog, error) {
 	_, err := os.Stat(kurtosisPackageCatalogYamlFilepath)
 	if err != nil {
 		return nil, stacktrace.Propagate(err, "an error occurred checking for Kurtosis package catalog YAML file existence on '%s'", kurtosisPackageCatalogYamlFilepath)

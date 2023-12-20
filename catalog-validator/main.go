@@ -2,7 +2,9 @@ package main
 
 import (
 	"github.com/kurtosis-tech/kurtosis-package-catalog/catalog-validator/importer"
+	"github.com/kurtosis-tech/stacktrace"
 	"github.com/sirupsen/logrus"
+	"os"
 	"path"
 	"runtime"
 	"strings"
@@ -24,13 +26,27 @@ func main() {
 
 	configureLogger()
 
-	packageCatalog, err := importer.ReadCatalog()
+	packageCatalogYamlFilepath, err := getKurtosisPackageCatalogYAMLFilepathFromArgs()
+	if err != nil {
+		exitFailure(err)
+	}
+
+	packageCatalog, err := importer.ReadCatalog(packageCatalogYamlFilepath)
 	if err != nil {
 		exitFailure(err)
 	}
 
 	logrus.Infof("Package catalog is '%+v'", packageCatalog)
 
+	logrus.Exit(successExitCode)
+}
+
+func getKurtosisPackageCatalogYAMLFilepathFromArgs() (string, error) {
+	args := os.Args
+	if len(args) < 2 {
+		return "", stacktrace.NewError("expected to received the kurtosis package catalog YAML filepath as the first argument, but it was not received")
+	}
+	return args[1], nil
 }
 
 func configureLogger() {
