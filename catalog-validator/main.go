@@ -2,6 +2,8 @@ package main
 
 import (
 	"github.com/kurtosis-tech/kurtosis-package-catalog/catalog-validator/importer"
+	"github.com/kurtosis-tech/kurtosis-package-catalog/catalog-validator/validation/rules"
+	"github.com/kurtosis-tech/kurtosis-package-catalog/catalog-validator/validation/validator"
 	"github.com/kurtosis-tech/stacktrace"
 	"github.com/sirupsen/logrus"
 	"os"
@@ -31,12 +33,20 @@ func main() {
 		exitFailure(err)
 	}
 
+	logrus.Infof("Importing the Kurtosis package catalog content from '%s'...", packageCatalogYamlFilepath)
 	packageCatalog, err := importer.ReadCatalog(packageCatalogYamlFilepath)
 	if err != nil {
 		exitFailure(err)
 	}
+	logrus.Info("...catalog YAML file was successfully imported")
 
-	logrus.Infof("Package catalog is '%+v'", packageCatalog)
+	logrus.Info("Running the validations...")
+	rulesToValidate := rules.GetAll()
+	validatorObj := validator.NewValidator(packageCatalog, rulesToValidate)
+	if err := validatorObj.Validate(); err != nil {
+		exitFailure(err)
+	}
+	logrus.Info("...all validations passed")
 
 	logrus.Exit(successExitCode)
 }
