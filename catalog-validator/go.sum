@@ -139,6 +139,10 @@ github.com/kurtosis-tech/kurtosis-package-indexer/server v0.0.0-20231220194403-4
 github.com/kurtosis-tech/kurtosis-package-indexer/server v0.0.0-20231220194403-478c551c349f/go.mod h1:NJRJGx1APkiySqvxWI///pRCNXlb0UFTxiVOHNx0S4o=
 github.com/kurtosis-tech/kurtosis-package-indexer/server v0.0.0-20231221131745-b1c7635d3c58 h1:sieCVvBnU6zgUNrsRLHtU4biXhEjfzY5M7/GHZO6bSw=
 github.com/kurtosis-tech/kurtosis-package-indexer/server v0.0.0-20231221131745-b1c7635d3c58/go.mod h1:NJRJGx1APkiySqvxWI///pRCNXlb0UFTxiVOHNx0S4o=
+github.com/kurtosis-tech/kurtosis-package-indexer/server v0.0.0-20231221142130-523be071bbac h1:wvKAaMt7NwsoJbRjZLIQTXgmb68tP54xcI9GvJpZ4DM=
+github.com/kurtosis-tech/kurtosis-package-indexer/server v0.0.0-20231221142130-523be071bbac/go.mod h1:NJRJGx1APkiySqvxWI///pRCNXlb0UFTxiVOHNx0S4o=
+github.com/kurtosis-tech/kurtosis-package-indexer/server v0.0.0-20231221143154-fc6662597c1b h1:INDMjrOPcuQ6uG/IbJeg4ADzx5q65JrRXWTq/tgTFI0=
+github.com/kurtosis-tech/kurtosis-package-indexer/server v0.0.0-20231221143154-fc6662597c1b/go.mod h1:NJRJGx1APkiySqvxWI///pRCNXlb0UFTxiVOHNx0S4o=
 github.com/kurtosis-tech/kurtosis/connect-server v0.0.0-20230825003324-75d481e0db8c h1:uJPPVe/161sd5tDlVgu1SN048KHv9XXXpbk5+w+CM6M=
 github.com/kurtosis-tech/kurtosis/connect-server v0.0.0-20230825003324-75d481e0db8c/go.mod h1:xM8ZXB9rNjX4swL2KI2gKA6MKBjUmxSLU8RTsRY3vBE=
 github.com/kurtosis-tech/stacktrace v0.0.0-20211028211901-1c67a77b5409 h1:YQTATifMUwZEtZYb0LVA7DK2pj8s71iY8rzweuUQ5+g=

@@ -1,6 +1,7 @@
 package rules
 
 import (
+	"context"
 	"github.com/kurtosis-tech/kurtosis-package-indexer/server/catalog"
 	"github.com/kurtosis-tech/kurtosis-package-indexer/server/types"
 	"github.com/kurtosis-tech/stacktrace"
@@ -23,7 +24,7 @@ func (duplicatedPackageRule *duplicatedPackageRule) GetName() string {
 	return duplicatedPackageRule.name
 }
 
-func (duplicatedPackageRule *duplicatedPackageRule) Check(catalog catalog.PackageCatalog) error {
+func (duplicatedPackageRule *duplicatedPackageRule) Check(ctx context.Context, catalog catalog.PackageCatalog) error {
 
 	packageNames := map[types.PackageName]bool{}
 

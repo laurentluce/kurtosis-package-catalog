@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"github.com/kurtosis-tech/kurtosis-package-catalog/catalog-validator/importer"
 	"github.com/kurtosis-tech/kurtosis-package-catalog/catalog-validator/validation/rules"
 	"github.com/kurtosis-tech/kurtosis-package-catalog/catalog-validator/validation/validator"
@@ -26,6 +27,7 @@ const (
 
 func main() {
 
+	ctx := context.Background()
 	configureLogger()
 
 	packageCatalogYamlFilepath, err := getKurtosisPackageCatalogYAMLFilepathFromArgs()
@@ -41,9 +43,12 @@ func main() {
 	logrus.Info("...catalog YAML file was successfully imported")
 
 	logrus.Info("Running the validations...")
-	rulesToValidate := rules.GetAll()
+	rulesToValidate, err := rules.GetAll(ctx)
+	if err != nil {
+		exitFailure(err)
+	}
 	validatorObj := validator.NewValidator(packageCatalog, rulesToValidate)
-	if err := validatorObj.Validate(); err != nil {
+	if err := validatorObj.Validate(ctx); err != nil {
 		exitFailure(err)
 	}
 	logrus.Info("...all validations passed")

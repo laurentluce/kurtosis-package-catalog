@@ -1,9 +1,22 @@
 package rules
 
-func GetAll() []Rule {
-	allRules := []Rule{
-		newDuplicatedPackageRule(),
+import (
+	"context"
+	"github.com/kurtosis-tech/kurtosis-package-indexer/server/github"
+	"github.com/kurtosis-tech/stacktrace"
+)
+
+func GetAll(ctx context.Context) ([]Rule, error) {
+
+	gitHubClient, err := github.CreateGithubClient(ctx)
+	if err != nil {
+		return nil, stacktrace.Propagate(err, "an error occurred creating the GitHub client")
 	}
 
-	return allRules
+	allRules := []Rule{
+		newDuplicatedPackageRule(),
+		newValidPackageRule(gitHubClient),
+	}
+
+	return allRules, nil
 }

@@ -1,8 +1,11 @@
 package rules
 
-import "github.com/kurtosis-tech/kurtosis-package-indexer/server/catalog"
+import (
+	"context"
+	"github.com/kurtosis-tech/kurtosis-package-indexer/server/catalog"
+)
 
 type Rule interface {
 	GetName() string
-	Check(catalog.PackageCatalog) error
+	Check(ctx context.Context, catalog catalog.PackageCatalog) error
 }
