@@ -23,6 +23,7 @@ jobs:
 
       # build and run the golang app
       - run: |
+          export GITHUB_USER_TOKEN=${KURTOSISBOT_GITHUB_TOKEN}
           catalog-validator/scripts/build.sh
           catalog-validator/build/catalog-validator << pipeline.parameters.kurtosis-package-catalog-yaml-file-path >>
           
