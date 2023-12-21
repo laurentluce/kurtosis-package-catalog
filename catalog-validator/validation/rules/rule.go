@@ -5,7 +5,9 @@ import (
 	"github.com/kurtosis-tech/kurtosis-package-indexer/server/catalog"
 )
 
+type RuleName string
+
 type Rule interface {
-	GetName() string
-	Check(ctx context.Context, catalog catalog.PackageCatalog) error
+	GetName() RuleName
+	Check(ctx context.Context, catalog catalog.PackageCatalog) *CheckResult
 }

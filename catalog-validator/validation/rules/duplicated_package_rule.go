@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/kurtosis-tech/kurtosis-package-indexer/server/catalog"
 	"github.com/kurtosis-tech/kurtosis-package-indexer/server/types"
-	"github.com/kurtosis-tech/stacktrace"
 )
 
 const (
@@ -20,20 +19,28 @@ func newDuplicatedPackageRule() *duplicatedPackageRule {
 	return &duplicatedPackageRule{name: duplicatedPackageRuleName}
 }
 
-func (duplicatedPackageRule *duplicatedPackageRule) GetName() string {
-	return duplicatedPackageRule.name
+func (duplicatedPackageRule *duplicatedPackageRule) GetName() RuleName {
+	return RuleName(duplicatedPackageRule.name)
 }
 
-func (duplicatedPackageRule *duplicatedPackageRule) Check(ctx context.Context, catalog catalog.PackageCatalog) error {
+func (duplicatedPackageRule *duplicatedPackageRule) Check(_ context.Context, catalog catalog.PackageCatalog) *CheckResult {
+
+	wasValidated := true
+	failures := map[types.PackageName][]string{}
 
 	packageNames := map[types.PackageName]bool{}
 
 	for _, packageData := range catalog {
 		packageName := packageData.GetPackageName()
 		if _, found := packageNames[packageName]; found {
-			return stacktrace.NewError("duplicated package name '%s' found in the Kurtosis package catalog", packageName)
+			failures[packageName] = []string{"duplicated name"}
+			wasValidated = false
+			continue
 		}
 		packageNames[packageName] = true
 	}
-	return nil
+
+	checkResult := newCheckResult(duplicatedPackageRule.GetName(), wasValidated, failures)
+
+	return checkResult
 }

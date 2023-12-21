@@ -35,8 +35,8 @@ func newValidPackageIconRule(gitHubClient *github.Client) *validPackageIconRule 
 	return &validPackageIconRule{name: validPackageIconRuleName, gitHubClient: gitHubClient}
 }
 
-func (packageExistRule *validPackageIconRule) GetName() string {
-	return packageExistRule.name
+func (packageExistRule *validPackageIconRule) GetName() RuleName {
+	return RuleName(packageExistRule.name)
 }
 
 func (packageExistRule *validPackageIconRule) Check(ctx context.Context, catalog catalog.PackageCatalog) error {

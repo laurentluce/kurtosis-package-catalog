@@ -43,3 +43,4 @@ packages:
   - name: "github.com/kurtosis-tech/log-load-package"
   #- name: "github.com/kurtosis-tech/grafana-package" NOT VALID ICON ASPECT RATIO IT SHOULD BE 1:1
   - name: "github.com/hugobyte/polkadot-kurtosis-package/chopsticks"
+  - name: "github.com/hugobyte/polkadot-kurtosis-package/chopsticks"
