@@ -16,6 +16,7 @@ func GetAll(ctx context.Context) ([]Rule, error) {
 	allRules := []Rule{
 		newDuplicatedPackageRule(),
 		newValidPackageRule(gitHubClient),
+		newValidPackageIconRule(gitHubClient),
 	}
 
 	return allRules, nil
