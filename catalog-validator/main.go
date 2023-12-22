@@ -54,14 +54,15 @@ func main() {
 		logrus.Errorf("THE VALIDATOR REPORT FAILURES IN THE FOLLOWING RULES")
 		logrus.Errorf("======================================================================")
 		for ruleName, packagesWithFailures := range validatorResult.GetRulesResult() {
+			logrus.Errorf("-------------------------------------------------------------------")
 			logrus.Errorf("RULE: '%s'", ruleName)
+			logrus.Errorf("-------------------------------------------------------------------")
 			for packageName, failures := range packagesWithFailures {
-				logrus.Errorf("- Package: '%s'", packageName)
+				logrus.Errorf("Package: '%s'", packageName)
 				for _, failure := range failures {
-					logrus.Errorf("   - %s", failure)
+					logrus.Errorf("  - %s", failure)
 				}
 			}
-			logrus.Errorf("-------------------------------------------------------------------")
 		}
 		logrus.Errorf("========================================================================")
 		exitFailure(stacktrace.NewError("the current package catalog is not valid."))

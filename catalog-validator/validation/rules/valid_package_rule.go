@@ -64,8 +64,8 @@ func (validPackageRule *validPackageRule) Check(ctx context.Context, catalog cat
 
 		}
 
-		failures[packageName] = packageFailures
 		if len(packageFailures) > 0 {
+			failures[packageName] = packageFailures
 			wasValidated = false
 			continue
 		}

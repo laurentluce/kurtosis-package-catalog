@@ -67,9 +67,8 @@ func (validPackageIconRule *validPackageIconRule) Check(ctx context.Context, cat
 
 		if packageIconWidth < minImageSize || packageIconHeight < minImageSize {
 			invalidMinSizeMsg := fmt.Sprintf(
-				"Kurtosis package icon for package '%s' has a not valid image size, the image is smaller than expected. "+
-					"The accepted min value is '%dpx' and the current size is width: %dpx and height: %dpx",
-				packageName,
+				"invalid image min size, it is smaller than expected. "+
+					"Valid min value is '%dpx' and the current size is width: %dpx and height: %dpx",
 				minImageSize,
 				packageIconWidth,
 				packageIconHeight,
@@ -79,9 +78,8 @@ func (validPackageIconRule *validPackageIconRule) Check(ctx context.Context, cat
 
 		if packageIconWidth > maxImageSize || packageIconHeight > maxImageSize {
 			invalidMaxSizeMsg := fmt.Sprintf(
-				"Kurtosis package icon for package '%s' has a not valid image size, the image is bigger than expected. "+
-					"The accepted max value is '%dpx' and the current size is width: %dpx and height: %dpx",
-				packageName,
+				"invalid image max size, it is bigger than expected. "+
+					"Valid max value is '%dpx' and the current size is width: %dpx and height: %dpx",
 				maxImageSize,
 				packageIconWidth,
 				packageIconHeight,
@@ -95,8 +93,8 @@ func (validPackageIconRule *validPackageIconRule) Check(ctx context.Context, cat
 			packageFailures = append(packageFailures, invalidAspectRatioMsg)
 		}
 
-		failures[packageName] = packageFailures
 		if len(packageFailures) > 0 {
+			failures[packageName] = packageFailures
 			wasValidated = false
 			continue
 		}
