@@ -2,6 +2,7 @@ package rules
 
 import (
 	"context"
+	"fmt"
 	"github.com/google/go-github/v54/github"
 	"github.com/kurtosis-tech/kurtosis-package-indexer/server/catalog"
 	"github.com/kurtosis-tech/kurtosis-package-indexer/server/consts"
@@ -35,11 +36,14 @@ func newValidPackageRule(gitHubClient *github.Client) *validPackageRule {
 	return &validPackageRule{name: validPackageRuleName, gitHubClient: gitHubClient}
 }
 
-func (packageExistRule *validPackageRule) GetName() RuleName {
-	return RuleName(packageExistRule.name)
+func (validPackageRule *validPackageRule) GetName() RuleName {
+	return RuleName(validPackageRule.name)
 }
 
-func (packageExistRule *validPackageRule) Check(ctx context.Context, catalog catalog.PackageCatalog) error {
+func (validPackageRule *validPackageRule) Check(ctx context.Context, catalog catalog.PackageCatalog) *CheckResult {
+
+	wasValidated := true
+	failures := map[types.PackageName][]string{}
 
 	for _, packageData := range catalog {
 		packageName := packageData.GetPackageName()
@@ -47,27 +51,40 @@ func (packageExistRule *validPackageRule) Check(ctx context.Context, catalog cat
 		repositoryOwner := packageData.GetRepositoryOwner()
 		repositoryName := packageData.GetRepositoryName()
 		repositoryPackageRootPath := packageData.GetRepositoryPackageRootPath()
-		packageNameFromKurtosisYamlFile, err := packageExistRule.getPackageNameFromKurtosisYmlFile(ctx, packageName, repositoryOwner, repositoryName, repositoryPackageRootPath)
+		packageFailures := []string{}
+		packageNameFromKurtosisYamlFile, err := validPackageRule.getPackageNameFromKurtosisYmlFile(ctx, packageName, repositoryOwner, repositoryName, repositoryPackageRootPath)
 		if err != nil {
-			return stacktrace.Propagate(err, "an error occurred getting the Kurtosis package name from the Kurtosis YAML file for package '%s'", packageName)
+			errorFailure := fmt.Sprintf("an error occurred getting the Kurtosis package name from the Kurtosis YAML file for package '%s'. Error was:\n%s", packageName, err.Error())
+			packageFailures = append(packageFailures, errorFailure)
+			continue
 		}
 		if packageName != packageNameFromKurtosisYamlFile {
-			return stacktrace.NewError("there is an inconsistency between the Kurtosis package name in the catalog '%s' with the name '%s' found in the '%s' file ", packageName, packageNameFromKurtosisYamlFile, consts.DefaultKurtosisYamlFilename)
+			invalidPackageNameMsg := fmt.Sprintf("package name '%s' in the catalog does not match with the name '%s' found in the package repository", packageName, packageNameFromKurtosisYamlFile)
+			packageFailures = append(packageFailures, invalidPackageNameMsg)
+
+		}
+
+		failures[packageName] = packageFailures
+		if len(packageFailures) > 0 {
+			wasValidated = false
+			continue
 		}
 		logrus.Debugf("...package '%s' successfully validated.", packageName)
 	}
 
-	return nil
+	checkResult := newCheckResult(validPackageRule.GetName(), wasValidated, failures)
+
+	return checkResult
 }
 
-func (packageExistRule *validPackageRule) getPackageNameFromKurtosisYmlFile(ctx context.Context, packageName types.PackageName, repositoryOwner string, repositoryName string, repositoryPackageRootPath string) (types.PackageName, error) {
+func (validPackageRule *validPackageRule) getPackageNameFromKurtosisYmlFile(ctx context.Context, packageName types.PackageName, repositoryOwner string, repositoryName string, repositoryPackageRootPath string) (types.PackageName, error) {
 	kurtosisYamlFilepath := path.Join(repositoryPackageRootPath, consts.DefaultKurtosisYamlFilename)
 	repoGetContentOpts := &github.RepositoryContentGetOptions{
 		Ref: "",
 	}
 
 	// get contents of kurtosis yaml file from GitHub
-	kurtosisYamlFileContentResult, _, resp, err := packageExistRule.gitHubClient.Repositories.GetContents(ctx, repositoryOwner, repositoryName, kurtosisYamlFilepath, repoGetContentOpts)
+	kurtosisYamlFileContentResult, _, resp, err := validPackageRule.gitHubClient.Repositories.GetContents(ctx, repositoryOwner, repositoryName, kurtosisYamlFilepath, repoGetContentOpts)
 	if err != nil && resp != nil && resp.StatusCode == http.StatusNotFound {
 		return "", stacktrace.NewError("No '%s' file for package '%s'", kurtosisYamlFilepath, packageName)
 	} else if err != nil {

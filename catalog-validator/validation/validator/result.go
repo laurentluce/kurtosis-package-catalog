@@ -7,10 +7,10 @@ import (
 
 type result struct {
 	isValidCatalog bool
-	rulesResult    map[types.PackageName]map[rules.RuleName][]string
+	rulesResult    map[rules.RuleName]map[types.PackageName][]string
 }
 
-func newResult(isValidCatalog bool, rulesResult map[types.PackageName]map[rules.RuleName][]string) *result {
+func newResult(isValidCatalog bool, rulesResult map[rules.RuleName]map[types.PackageName][]string) *result {
 	return &result{isValidCatalog: isValidCatalog, rulesResult: rulesResult}
 }
 
@@ -18,6 +18,6 @@ func (result *result) IsValidCatalog() bool {
 	return result.isValidCatalog
 }
 
-func (result *result) GetRulesResult() map[types.PackageName]map[rules.RuleName][]string {
+func (result *result) GetRulesResult() map[rules.RuleName]map[types.PackageName][]string {
 	return result.rulesResult
 }

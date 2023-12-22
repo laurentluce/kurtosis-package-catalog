@@ -20,7 +20,7 @@ func NewValidator(catalog catalog.PackageCatalog, rules []rules.Rule) *Validator
 func (validator *Validator) Validate(ctx context.Context) *result {
 
 	isValidCatalog := true
-	rulesResult := map[types.PackageName]map[rules.RuleName][]string{}
+	rulesResult := map[rules.RuleName]map[types.PackageName][]string{}
 
 	for _, rule := range validator.rules {
 		logrus.Debugf("Checking rule '%s'", rule.GetName())
@@ -33,7 +33,13 @@ func (validator *Validator) Validate(ctx context.Context) *result {
 				break
 			}
 			ruleName := checkResult.GetRuleName()
-			rulesResult[packageName][ruleName] = checkResult.GetFailuresForPackage(packageName)
+			failuresByPackageForRule, found := rulesResult[ruleName]
+			if found {
+				failuresByPackageForRule[packageName] = checkResult.GetFailuresForPackage(packageName)
+			} else {
+				rulesResult[ruleName] = checkResult.GetFailures()
+			}
+
 			logrus.Debugf("the current catalog version does not pass rule '%s'", rule.GetName())
 			continue
 		}

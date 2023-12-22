@@ -2,6 +2,7 @@ package rules
 
 import (
 	"context"
+	"fmt"
 	"github.com/google/go-github/v54/github"
 	"github.com/kurtosis-tech/kurtosis-package-indexer/server/catalog"
 	"github.com/kurtosis-tech/kurtosis-package-indexer/server/consts"
@@ -35,20 +36,27 @@ func newValidPackageIconRule(gitHubClient *github.Client) *validPackageIconRule 
 	return &validPackageIconRule{name: validPackageIconRuleName, gitHubClient: gitHubClient}
 }
 
-func (packageExistRule *validPackageIconRule) GetName() RuleName {
-	return RuleName(packageExistRule.name)
+func (validPackageIconRule *validPackageIconRule) GetName() RuleName {
+	return RuleName(validPackageIconRule.name)
 }
 
-func (packageExistRule *validPackageIconRule) Check(ctx context.Context, catalog catalog.PackageCatalog) error {
+func (validPackageIconRule *validPackageIconRule) Check(ctx context.Context, catalog catalog.PackageCatalog) *CheckResult {
+
+	wasValidated := true
+	failures := map[types.PackageName][]string{}
+
 	for _, packageData := range catalog {
 		packageName := packageData.GetPackageName()
 		logrus.Debugf("Checking if package '%s' contains a valid icon...", packageName)
 		repositoryOwner := packageData.GetRepositoryOwner()
 		repositoryName := packageData.GetRepositoryName()
 		repositoryPackageRootPath := packageData.GetRepositoryPackageRootPath()
-		packageIconImageConfig, err := packageExistRule.getPackageIconImageConfig(ctx, packageName, repositoryOwner, repositoryName, repositoryPackageRootPath)
+		packageFailures := []string{}
+		packageIconImageConfig, err := validPackageIconRule.getPackageIconImageConfig(ctx, packageName, repositoryOwner, repositoryName, repositoryPackageRootPath)
 		if err != nil {
-			return stacktrace.Propagate(err, "an error occurred getting the Kurtosis package icon image config for package '%s'", packageName)
+			errorFailure := fmt.Sprintf("an error occurred getting the Kurtosis package icon image config for package '%s'. Error was:\n%s", packageName, err.Error())
+			packageFailures = append(packageFailures, errorFailure)
+			continue
 		}
 		if packageIconImageConfig == nil {
 			logrus.Debugf("package '%s' does not have an icon yet.", packageName)
@@ -58,7 +66,7 @@ func (packageExistRule *validPackageIconRule) Check(ctx context.Context, catalog
 		packageIconHeight := packageIconImageConfig.Height
 
 		if packageIconWidth < minImageSize || packageIconHeight < minImageSize {
-			return stacktrace.NewError(
+			invalidMinSizeMsg := fmt.Sprintf(
 				"Kurtosis package icon for package '%s' has a not valid image size, the image is smaller than expected. "+
 					"The accepted min value is '%dpx' and the current size is width: %dpx and height: %dpx",
 				packageName,
@@ -66,10 +74,11 @@ func (packageExistRule *validPackageIconRule) Check(ctx context.Context, catalog
 				packageIconWidth,
 				packageIconHeight,
 			)
+			packageFailures = append(packageFailures, invalidMinSizeMsg)
 		}
 
 		if packageIconWidth > maxImageSize || packageIconHeight > maxImageSize {
-			return stacktrace.NewError(
+			invalidMaxSizeMsg := fmt.Sprintf(
 				"Kurtosis package icon for package '%s' has a not valid image size, the image is bigger than expected. "+
 					"The accepted max value is '%dpx' and the current size is width: %dpx and height: %dpx",
 				packageName,
@@ -77,29 +86,36 @@ func (packageExistRule *validPackageIconRule) Check(ctx context.Context, catalog
 				packageIconWidth,
 				packageIconHeight,
 			)
+			packageFailures = append(packageFailures, invalidMaxSizeMsg)
 		}
 
 		if packageIconWidth != packageIconHeight {
-			return stacktrace.NewError(
-				"Kurtosis package icon for package '%s' hasn't a valid aspect ratio, the accepted aspect ration is 1:1 (a square image). ",
-				packageName,
-			)
+			invalidAspectRatioMsg := "invalid aspect ratio, the accepted aspect ration is 1:1 (a square image)."
+
+			packageFailures = append(packageFailures, invalidAspectRatioMsg)
 		}
 
+		failures[packageName] = packageFailures
+		if len(packageFailures) > 0 {
+			wasValidated = false
+			continue
+		}
 		logrus.Debugf("...package icon for '%s' successfully validated.", packageName)
 	}
 
-	return nil
+	checkResult := newCheckResult(validPackageIconRule.GetName(), wasValidated, failures)
+
+	return checkResult
 }
 
-func (packageExistRule *validPackageIconRule) getPackageIconImageConfig(ctx context.Context, packageName types.PackageName, repositoryOwner string, repositoryName string, repositoryPackageRootPath string) (*image.Config, error) {
+func (validPackageIconRule *validPackageIconRule) getPackageIconImageConfig(ctx context.Context, packageName types.PackageName, repositoryOwner string, repositoryName string, repositoryPackageRootPath string) (*image.Config, error) {
 	packageIconFilepath := path.Join(repositoryPackageRootPath, consts.KurtosisPackageIconImgName)
 	repoGetContentOpts := &github.RepositoryContentGetOptions{
 		Ref: "",
 	}
 
 	// get contents of kurtosis package icon file from GitHub
-	packageIconFileContentResult, _, resp, err := packageExistRule.gitHubClient.Repositories.GetContents(ctx, repositoryOwner, repositoryName, packageIconFilepath, repoGetContentOpts)
+	packageIconFileContentResult, _, resp, err := validPackageIconRule.gitHubClient.Repositories.GetContents(ctx, repositoryOwner, repositoryName, packageIconFilepath, repoGetContentOpts)
 	if err != nil {
 		if resp != nil && resp.StatusCode == http.StatusNotFound {
 			// having the icon is not mandatory

@@ -51,20 +51,20 @@ func main() {
 	validatorResult := validatorObj.Validate(ctx)
 
 	if !validatorResult.IsValidCatalog() {
-		logrus.Debug("The validator execution reported failures in some packages")
-		logrus.Debug("===========================================================")
-		for packageName, rulesResult := range validatorResult.GetRulesResult() {
-			logrus.Debugf("Package '%s' has failures in:", packageName)
-			for ruleName, failures := range rulesResult {
-				logrus.Debugf("- RULE '%s'", ruleName)
+		logrus.Errorf("THE VALIDATOR REPORT FAILURES IN THE FOLLOWING RULES")
+		logrus.Errorf("======================================================================")
+		for ruleName, packagesWithFailures := range validatorResult.GetRulesResult() {
+			logrus.Errorf("RULE: '%s'", ruleName)
+			for packageName, failures := range packagesWithFailures {
+				logrus.Errorf("- Package: '%s'", packageName)
 				for _, failure := range failures {
-					logrus.Debugf("   -%s", failure)
+					logrus.Errorf("   - %s", failure)
 				}
 			}
-			logrus.Debug("-------------------------------------------------------")
+			logrus.Errorf("-------------------------------------------------------------------")
 		}
-
-		exitFailure(stacktrace.NewError("some package/s do not pass the package catalog validation rules."))
+		logrus.Errorf("========================================================================")
+		exitFailure(stacktrace.NewError("the current package catalog is not valid."))
 	}
 
 	logrus.Info("...all validations passed")
