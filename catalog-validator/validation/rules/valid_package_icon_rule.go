@@ -56,41 +56,42 @@ func (validPackageIconRule *validPackageIconRule) Check(ctx context.Context, cat
 		if err != nil {
 			errorFailure := fmt.Sprintf("an error occurred getting the Kurtosis package icon image config for package '%s'. Error was:\n%s", packageName, err.Error())
 			packageFailures = append(packageFailures, errorFailure)
-			continue
 		}
-		if packageIconImageConfig == nil {
+		if err == nil && packageIconImageConfig == nil {
 			logrus.Debugf("package '%s' does not have an icon yet.", packageName)
 			continue
 		}
-		packageIconWidth := packageIconImageConfig.Width
-		packageIconHeight := packageIconImageConfig.Height
+		if err == nil {
+			packageIconWidth := packageIconImageConfig.Width
+			packageIconHeight := packageIconImageConfig.Height
 
-		if packageIconWidth < minImageSize || packageIconHeight < minImageSize {
-			invalidMinSizeMsg := fmt.Sprintf(
-				"invalid image min size, it is smaller than expected. "+
-					"Valid min value is '%dpx' and the current size is width: %dpx and height: %dpx",
-				minImageSize,
-				packageIconWidth,
-				packageIconHeight,
-			)
-			packageFailures = append(packageFailures, invalidMinSizeMsg)
-		}
+			if packageIconWidth < minImageSize || packageIconHeight < minImageSize {
+				invalidMinSizeMsg := fmt.Sprintf(
+					"invalid image min size, it is smaller than expected. "+
+						"Valid min value is '%dpx' and the current size is width: %dpx and height: %dpx",
+					minImageSize,
+					packageIconWidth,
+					packageIconHeight,
+				)
+				packageFailures = append(packageFailures, invalidMinSizeMsg)
+			}
 
-		if packageIconWidth > maxImageSize || packageIconHeight > maxImageSize {
-			invalidMaxSizeMsg := fmt.Sprintf(
-				"invalid image max size, it is bigger than expected. "+
-					"Valid max value is '%dpx' and the current size is width: %dpx and height: %dpx",
-				maxImageSize,
-				packageIconWidth,
-				packageIconHeight,
-			)
-			packageFailures = append(packageFailures, invalidMaxSizeMsg)
-		}
+			if packageIconWidth > maxImageSize || packageIconHeight > maxImageSize {
+				invalidMaxSizeMsg := fmt.Sprintf(
+					"invalid image max size, it is bigger than expected. "+
+						"Valid max value is '%dpx' and the current size is width: %dpx and height: %dpx",
+					maxImageSize,
+					packageIconWidth,
+					packageIconHeight,
+				)
+				packageFailures = append(packageFailures, invalidMaxSizeMsg)
+			}
 
-		if packageIconWidth != packageIconHeight {
-			invalidAspectRatioMsg := "invalid aspect ratio, the accepted aspect ration is 1:1 (a square image)."
+			if packageIconWidth != packageIconHeight {
+				invalidAspectRatioMsg := "invalid aspect ratio, the accepted aspect ration is 1:1 (a square image)."
 
-			packageFailures = append(packageFailures, invalidAspectRatioMsg)
+				packageFailures = append(packageFailures, invalidAspectRatioMsg)
+			}
 		}
 
 		if len(packageFailures) > 0 {

@@ -1,4 +1,5 @@
 packages:
+  - name: "github.com/kurtosis-tech/fake-package"
   - name: "github.com/kurtosis-tech/autogpt-package"
   - name: "github.com/galenmarchetti/jupyter-notebook-package"
   - name: "github.com/hugobyte/dive"

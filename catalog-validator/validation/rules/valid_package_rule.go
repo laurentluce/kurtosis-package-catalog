@@ -54,14 +54,13 @@ func (validPackageRule *validPackageRule) Check(ctx context.Context, catalog cat
 		packageFailures := []string{}
 		packageNameFromKurtosisYamlFile, err := validPackageRule.getPackageNameFromKurtosisYmlFile(ctx, packageName, repositoryOwner, repositoryName, repositoryPackageRootPath)
 		if err != nil {
-			errorFailure := fmt.Sprintf("an error occurred getting the Kurtosis package name from the Kurtosis YAML file for package '%s'. Error was:\n%s", packageName, err.Error())
+			errorFailure := fmt.Sprintf("the package does not exist or does not contains the '%s' file", consts.DefaultKurtosisYamlFilename)
 			packageFailures = append(packageFailures, errorFailure)
-			continue
-		}
-		if packageName != packageNameFromKurtosisYamlFile {
-			invalidPackageNameMsg := fmt.Sprintf("package name '%s' in the catalog does not match with the name '%s' found in the package repository", packageName, packageNameFromKurtosisYamlFile)
-			packageFailures = append(packageFailures, invalidPackageNameMsg)
-
+		} else {
+			if packageName != packageNameFromKurtosisYamlFile {
+				invalidPackageNameMsg := fmt.Sprintf("package name '%s' in the catalog does not match with the name '%s' found in the package repository", packageName, packageNameFromKurtosisYamlFile)
+				packageFailures = append(packageFailures, invalidPackageNameMsg)
+			}
 		}
 
 		if len(packageFailures) > 0 {
