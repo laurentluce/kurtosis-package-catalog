@@ -4,7 +4,7 @@ packages:
   - name: "github.com/hugobyte/dive"
   - name: "github.com/kurtosis-tech/ethereum-package"
   - name: "github.com/logos-co/wadoku"
-  #- name: "github.com/awesome-abstraction/arbitrum-stylus-package" NOT VALID ICON SIZE REDUCE IT TO 1024
+  - name: "github.com/awesome-abstraction/arbitrum-stylus-package"
   - name: "github.com/bharath-123/db-adminer-package"
   - name: "github.com/kurtosis-tech/agentgpt-package"
   - name: "github.com/hugobyte/polkadot-kurtosis-package"
@@ -20,18 +20,18 @@ packages:
   - name: "github.com/kurtosis-tech/hyperlane-package"
   - name: "github.com/galenmarchetti/analytics-tooling"
   - name: "github.com/kurtosis-tech/postgres-package"
-  #- name: "github.com/kurtosis-tech/avalanche-package" NOT VALID ICON ASPECT RATIO IT SHOULD BE 1:1
+  - name: "github.com/kurtosis-tech/avalanche-package"
   - name: "github.com/kurtosis-tech/web3-tools"
   - name: "github.com/kurtosis-tech/rabbitmq-package"
-  #- name: "github.com/kurtosis-tech/etcd-package" NOT VALID ICON SIZE AND ASPECT RATIO
-  #- name: "github.com/kurtosis-tech/redis-package" NOT VALID ICON ASPECT RATIO IT SHOULD BE 1:1
+  - name: "github.com/kurtosis-tech/etcd-package"
+  - name: "github.com/kurtosis-tech/redis-package"
   - name: "github.com/kurtosis-tech/novu-import-example"
-  #- name: "github.com/kurtosis-tech/cassandra-package" NOT VALID ICON SIZE AND ASPECT RATIO
+  - name: "github.com/kurtosis-tech/cassandra-package"
   - name: "github.com/kurtosis-tech/sei-package"
   - name: "github.com/kurtosis-tech/chainlink-node-package"
   - name: "github.com/kurtosis-tech/flink-package"
   - name: "github.com/kurtosis-tech/aptos-package/testnet-topology"
-  #- name: "github.com/kurtosis-tech/nginx-package" NOT VALID ICON SIZE AND ASPECT RATIO
+  - name: "github.com/kurtosis-tech/nginx-package"
   - name: "github.com/kurtosis-tech/mongodb-package"
   - name: "github.com/kurtosis-tech/datastore-army-package"
   - name: "github.com/kurtosis-tech/optimism-package"
@@ -39,8 +39,8 @@ packages:
   - name: "github.com/kurtosis-tech/basic-service-package"
   - name: "github.com/kurtosis-tech/llm-package"
   - name: "github.com/kurtosis-tech/novu-package"
-  #- name: "github.com/kurtosis-tech/prometheus-package" NOT VALID ICON SIZE IT SHOULD BE 120px at least
+  - name: "github.com/kurtosis-tech/prometheus-package"
   - name: "github.com/kurtosis-tech/log-load-package"
-  #- name: "github.com/kurtosis-tech/grafana-package" NOT VALID ICON ASPECT RATIO IT SHOULD BE 1:1
+  - name: "github.com/kurtosis-tech/grafana-package"
   - name: "github.com/hugobyte/polkadot-kurtosis-package/chopsticks"
   - name: "github.com/hugobyte/polkadot-kurtosis-package/chopsticks"
