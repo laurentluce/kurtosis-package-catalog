@@ -2,6 +2,7 @@ package rules
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/google/go-github/v54/github"
 	"github.com/kurtosis-tech/kurtosis-package-indexer/server/catalog"
@@ -120,7 +121,12 @@ func (validPackageIconRule *validPackageIconRule) getPackageIconImageConfig(ctx 
 			// having the icon is not mandatory
 			return nil, nil
 		}
-		return nil, stacktrace.Propagate(err, "an error occurred reading content of Kurtosis Package '%s' - file '%s'", packageName, packageIconFilepath)
+		errMsj := fmt.Sprintf("an error occurred reading content of Kurtosis Package '%s' - file '%s'", packageName, packageIconFilepath)
+		if errors.Is(err, &github.RateLimitError{}) {
+			errMsj = "GitHub API rate limit exceeded."
+			logrus.Errorf("%s Error is:\n%v", errMsj, err.Error())
+		}
+		return nil, stacktrace.Propagate(err, errMsj)
 	}
 
 	rawPackageIconContentStr, err := packageIconFileContentResult.GetContent()

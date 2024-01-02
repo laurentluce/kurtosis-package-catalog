@@ -2,6 +2,7 @@ package rules
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/google/go-github/v54/github"
 	"github.com/kurtosis-tech/kurtosis-package-indexer/server/catalog"
@@ -87,7 +88,12 @@ func (validPackageRule *validPackageRule) getPackageNameFromKurtosisYmlFile(ctx 
 	if err != nil && resp != nil && resp.StatusCode == http.StatusNotFound {
 		return "", stacktrace.NewError("No '%s' file for package '%s'", kurtosisYamlFilepath, packageName)
 	} else if err != nil {
-		return "", stacktrace.Propagate(err, "An error occurred reading content of Kurtosis Package '%s' - file '%s'", packageName, kurtosisYamlFilepath)
+		errMsj := fmt.Sprintf("An error occurred reading content of Kurtosis Package '%s' - file '%s'", packageName, kurtosisYamlFilepath)
+		if errors.Is(err, &github.RateLimitError{}) {
+			errMsj = "GitHub API rate limit exceeded."
+			logrus.Errorf("%s Error is:\n%v", errMsj, err.Error())
+		}
+		return "", stacktrace.Propagate(err, "%s", errMsj)
 	}
 
 	kurtosisYaml, err := parseKurtosisYaml(kurtosisYamlFileContentResult)
