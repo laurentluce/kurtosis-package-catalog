@@ -3,7 +3,7 @@ module github.com/kurtosis-tech/kurtosis-package-catalog/catalog-validator
 go 1.20
 
 require (
-	github.com/kurtosis-tech/kurtosis-package-indexer/server v0.0.0-20231221180048-e01858dd6edd //TODO upgrade this put a main branch version now is pointing to the lporoli/publish-catalog-func branch
+	github.com/kurtosis-tech/kurtosis-package-indexer/server v0.0.0-20240102153702-2b1c60be2f40
 	github.com/kurtosis-tech/stacktrace v0.0.0-20211028211901-1c67a77b5409
 )
 
