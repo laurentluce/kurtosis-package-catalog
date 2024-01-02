@@ -48,7 +48,10 @@ func main() {
 		exitFailure(err)
 	}
 	validatorObj := validator.NewValidator(packageCatalog, rulesToValidate)
-	validatorResult := validatorObj.Validate(ctx)
+	validatorResult, err := validatorObj.Validate(ctx)
+	if err != nil {
+		exitFailure(err)
+	}
 
 	if !validatorResult.IsValidCatalog() {
 		logrus.Errorf("THE VALIDATOR REPORT FAILURES IN THE FOLLOWING RULES")
