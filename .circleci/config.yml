@@ -1,0 +1,40 @@
+version: 2.1
+
+parameters:
+  go-version:
+    type: string
+    default: "1.20"
+  kurtosis-package-catalog-yaml-file-path:
+    type: string
+    default: "kurtosis-package-catalog.yml"
+
+# NOTE: Because CircleCI jobs run on separate machines from each other, we duplicate steps (like checkout) between jobs. This is because doing the "correct" DRY
+#  refactoring of, "one job for checkout, one job for build Docker image, etc." would require a) persisting files between jobs and b) persisting Docker images between
+#  jobs. Both are annoying (saving/loading workspaces require re-downloading the workspace over the network, and there doesn't seem to be a good way to do Docker
+#  images), so we run everything inside a single job.
+# See also: https://discuss.circleci.com/t/can-docker-images-be-preserved-between-jobs-in-a-workflow-without-a-manual-load-save/23388/12
+jobs:
+  build_catalog_validator:
+    docker:
+      - image: "cimg/go:<< pipeline.parameters.go-version>>"
+    working_directory: /home/circleci/workspace
+    steps:
+      - checkout
+
+      # build and run the golang app
+      - run: |
+          export GITHUB_USER_TOKEN=${KURTOSISBOT_GITHUB_TOKEN}
+          catalog-validator/scripts/build.sh
+          catalog-validator/build/catalog-validator << pipeline.parameters.kurtosis-package-catalog-yaml-file-path >>
+          
+workflows:
+  build:
+    jobs:
+      - build_catalog_validator:
+          context:
+            - github-user
+          filters:
+            branches:
+              ignore:
+                - develop
+                - main
