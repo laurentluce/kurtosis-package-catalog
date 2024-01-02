@@ -30,7 +30,7 @@ func (ruleReport *CheckResult) GetFailures() map[types.PackageName][]string {
 func (ruleReport *CheckResult) GetFailuresForPackage(packageName types.PackageName) ([]string, error) {
 	failures, found := ruleReport.failures[packageName]
 	if !found {
-		return nil, stacktrace.NewError("Expected to find failures for package '%s' but nothing was found, this is a bug in the catalog")
+		return nil, stacktrace.NewError("Expected to find failures for package '%s' but nothing was found, this is a bug in the catalog", packageName)
 	}
 	return failures, nil
 }
