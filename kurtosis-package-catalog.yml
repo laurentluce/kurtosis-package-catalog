@@ -42,4 +42,4 @@ packages:
   - name: "github.com/kurtosis-tech/prometheus-package"
   - name: "github.com/kurtosis-tech/log-load-package"
   - name: "github.com/kurtosis-tech/grafana-package"
-  - name: "github.com/hugobyte/polkadot-kurtosis-package/chopsticks"
+  - name: "github.com/hugobyte/polkadot-kurtosis-package"
