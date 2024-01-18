@@ -7,7 +7,6 @@ packages:
   - name: "github.com/awesome-abstraction/arbitrum-stylus-package"
   - name: "github.com/bharath-123/db-adminer-package"
   - name: "github.com/kurtosis-tech/agentgpt-package"
-  - name: "github.com/hugobyte/polkadot-kurtosis-package"
   - name: "github.com/kurtosis-tech/awesome-kurtosis/quickstart"
   - name: "github.com/kurtosis-tech/awesome-kurtosis/data-package"
   - name: "github.com/kurtosis-tech/awesome-kurtosis/chainlink-node"
