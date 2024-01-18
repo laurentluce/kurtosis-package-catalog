@@ -43,3 +43,4 @@ packages:
   - name: "github.com/kurtosis-tech/log-load-package"
   - name: "github.com/kurtosis-tech/grafana-package"
   - name: "github.com/hugobyte/polkadot-kurtosis-package"
+  - name: "github.com/leoporoli/polkadot-kurtosis-package"
