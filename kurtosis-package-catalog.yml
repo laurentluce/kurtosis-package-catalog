@@ -1,7 +1,6 @@
 packages:
   - name: "github.com/kurtosis-tech/autogpt-package"
   - name: "github.com/galenmarchetti/jupyter-notebook-package"
-  - name: "github.com/hugobyte/dive"
   - name: "github.com/kurtosis-tech/ethereum-package"
   - name: "github.com/logos-co/wadoku"
   - name: "github.com/awesome-abstraction/arbitrum-stylus-package"
@@ -42,3 +41,4 @@ packages:
   - name: "github.com/kurtosis-tech/log-load-package"
   - name: "github.com/kurtosis-tech/grafana-package"
   - name: "github.com/hugobyte/polkadot-kurtosis-package"
+  - name: "github.com/hugobyte/dive-packages"
