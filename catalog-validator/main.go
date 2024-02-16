@@ -41,7 +41,7 @@ func main() {
 		exitFailure(err)
 	}
 	if packageCatalog == nil {
-		logrus.Info("...there aren't new packages, in the catalog file '%s', to validate", packageCatalogYamlFilepath)
+		logrus.Infof("...there aren't new packages, in the catalog file '%s', to validate", packageCatalogYamlFilepath)
 	}
 	logrus.Info("...new packages added successfully obtained.")
 
