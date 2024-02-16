@@ -35,12 +35,15 @@ func main() {
 		exitFailure(err)
 	}
 
-	logrus.Infof("Importing the Kurtosis package catalog content from '%s'...", packageCatalogYamlFilepath)
-	packageCatalog, err := importer.ReadCatalog(packageCatalogYamlFilepath)
+	logrus.Infof("Getting the new Kurtosis packages from '%s'...", packageCatalogYamlFilepath)
+	packageCatalog, err := importer.GetNewPackageInTheCatalog(packageCatalogYamlFilepath)
 	if err != nil {
 		exitFailure(err)
 	}
-	logrus.Info("...catalog YAML file was successfully imported")
+	if packageCatalog == nil {
+		logrus.Infof("...there aren't new packages, in the catalog file '%s', to validate", packageCatalogYamlFilepath)
+	}
+	logrus.Info("...new packages added successfully obtained.")
 
 	logrus.Info("Running the validations...")
 	rulesToValidate, err := rules.GetAll(ctx)
