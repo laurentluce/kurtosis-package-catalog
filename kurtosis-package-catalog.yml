@@ -36,6 +36,7 @@ packages:
   - name: "github.com/kurtosis-tech/log-load-package"
   - name: "github.com/kurtosis-tech/grafana-package"
   - name: "github.com/kurtosis-tech/mern-package"
+  - name: "github.com/kurtosis-tech/django-package"
   - name: "github.com/awesome-abstraction/arbitrum-stylus-package"
   - name: "github.com/bharath-123/db-adminer-package"
   - name: "github.com/galenmarchetti/jupyter-notebook-package"
