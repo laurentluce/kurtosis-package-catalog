@@ -1,2 +1,4 @@
 packages:
   - name: "github.com/docker/awesome-compose/postgresql-pgadmin"
+  - name: "github.com/docker/awesome-compose/wireguard"
+  - name: "github.com/docker/awesome-compose/flask"
